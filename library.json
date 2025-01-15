@@ -1,0 +1,35 @@
+{
+    "name": "UtilifyDigitalInput",
+    "version": "1.0.0",
+    "description": "Utilify provides a collection of versatile digital inputs for Arduino and ESP32 platforms.",
+    "keywords": ["pushbutton", "button", "embedded", "platformio", "arduino", "esp32"],
+    "authors": [
+      {
+        "name": "Pierre-François Léon",
+        "email": "pierrefrancois.leon@gmail.com",
+        "maintainer": true
+      }
+    ],
+    "excludeFiles": [
+      "main.cpp"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/PiFou86/UtilifyDigitalInput.git"
+    },
+    "license": "MIT",
+    "frameworks": ["arduino"],
+    "platforms": [
+      "atmelavr",
+      "espressif32",
+      "renesas-ra"
+    ],
+    "dependencies": [ 
+      {
+        "name": "Utilify",
+        "url": "https://github.com/PiFou86/Utilify.git",
+        "version": "main"
+      }
+    ]
+}
+  
