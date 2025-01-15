@@ -1,4 +1,4 @@
-#include "PushButton.h"
+#include <Utilify/DigitalInput/PushButton.h>
 
 PushButton::PushButton(int pin, ActionBase<void>* action)
     : TaskBase(), m_pin(pin), m_action(action) {
