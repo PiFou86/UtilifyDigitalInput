@@ -1,18 +1,26 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include <Utilify/DigitalInput/PushButton.h>
 
+PushButton* pushButton = nullptr;
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200);
+
+  pushButton = new PushButton(2);
+
+  pushButton->callbackKeyUp([]() {
+    Serial.println("Up");
+  });
+
+  pushButton->callbackKeyDown([]() {
+    Serial.println("Down");
+  });
+
+  pushButton->callbackKeyUpLongPress([]() {
+    Serial.println("Long press");
+  });
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  pushButton->tick();
 }
