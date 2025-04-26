@@ -20,13 +20,13 @@ PushButton::PushButton(int pin)
 }
 
 PushButton::PushButton(int pin, ActionBase<void>* actionKeyUp)
-    : TaskBase(), m_pin(pin), m_actionKeyUp(actionKeyUp) {
-  ;
+    : PushButton(pin) {
+  this->m_actionKeyUp = actionKeyUp;
 }
 
 PushButton::PushButton(int pin, Callback callbackKeyUp)
-    : TaskBase(), m_pin(pin), m_callbackKeyUp(callbackKeyUp) {
-  ;
+    : PushButton(pin) {
+  this->m_callbackKeyUp = callbackKeyUp;
 }
 
 void PushButton::callbackKeyUp(Callback callbackKeyUp) {
