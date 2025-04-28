@@ -35,7 +35,8 @@ class PushButton : public TaskBase {
   Callback m_callbackKeyUpLongPress;
   ActionBase<void>* m_actionKeyUpLongPress;
 
-  long m_lastStateChangeTime;
+  unsigned long m_lastStateChangeTime;
+  unsigned long m_lastDownStateChangeTime;
   int m_lastButtonState;
   int m_lastStableButtonState;
 

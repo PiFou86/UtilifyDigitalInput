@@ -14,7 +14,10 @@ PushButton::PushButton(int pin)
       m_actionKeyUpLongPress(nullptr) {
   pinMode(this->m_pin, INPUT);
 
-  this->m_lastStateChangeTime = 0;
+  unsigned long currentTime = millis();
+  this->m_lastStateChangeTime = currentTime;
+  this->m_lastDownStateChangeTime = currentTime;
+
   this->m_lastButtonState = HIGH;
   this->m_lastStableButtonState = HIGH;
 }
@@ -62,7 +65,7 @@ void PushButton::callbackKeyUpLongPress(
 
 void PushButton::tick() {
   int buttonState = digitalRead(this->m_pin);
-  long currentTime = millis();
+  unsigned long currentTime = millis();
   if (buttonState != m_lastButtonState) {
     m_lastStateChangeTime = currentTime;
     m_lastButtonState = buttonState;
@@ -74,8 +77,10 @@ void PushButton::tick() {
       } else if (m_callbackKeyDown) {
         m_callbackKeyDown();
       }
+      m_lastDownStateChangeTime = currentTime;
     } else if (m_lastStableButtonState == LOW && buttonState == HIGH) {
-      if (currentTime - m_lastStateChangeTime > longPressDelay) {
+      if ((m_actionKeyUpLongPress || m_callbackKeyUpLongPress) &&
+          currentTime - m_lastDownStateChangeTime > longPressDelay ) {
         if (m_actionKeyUpLongPress) {
           m_actionKeyUpLongPress->execute();
         } else if (m_callbackKeyUpLongPress) {
