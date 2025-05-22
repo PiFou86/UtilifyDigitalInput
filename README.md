@@ -22,6 +22,7 @@ platform = atmelavr
 board = uno
 monitor_speed = 9600
 lib_deps =
+    https://github.com/PiFou86/Utilify.git
     https://github.com/PiFou86/UtilifyDigitalInput.git
 
 [env:esp32doit-devkit-v1]
