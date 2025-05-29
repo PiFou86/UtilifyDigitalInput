@@ -2,6 +2,7 @@
 #include <Utilify/DigitalInput/PushButton.h>
 
 PushButton* pushButton = nullptr;
+bool LED_state = false;
 void setup() {
 #ifdef ARDUINO_AVR_UNO
   Serial.begin(9600);
@@ -11,9 +12,16 @@ void setup() {
 #else
 #error "Unsupported board"
 #endif
+  pinMode(LED_BUILTIN, OUTPUT);
+  LED_state = digitalRead(LED_BUILTIN);
+
   pushButton = new PushButton(2);
 
-  pushButton->callbackKeyUp([]() { Serial.println("Up"); });
+  pushButton->callbackKeyUp([]() {
+    LED_state = !LED_state;
+    digitalWrite(LED_BUILTIN, LED_state);
+    Serial.println("Up");
+  });
 
   pushButton->callbackKeyDown([]() { Serial.println("Down"); });
 
