@@ -12,7 +12,7 @@ PushButton::PushButton(int pin)
 
       m_callbackKeyUpLongPress(nullptr),
       m_actionKeyUpLongPress(nullptr) {
-  pinMode(this->m_pin, INPUT);
+  pinMode(this->m_pin, INPUT_PULLUP);
 
   unsigned long currentTime = millis();
   this->m_lastStateChangeTime = currentTime;
