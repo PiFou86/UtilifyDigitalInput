@@ -25,7 +25,9 @@ void setup() {
 
   pushButton->callbackKeyDown([]() { Serial.println("Down"); });
 
-  pushButton->callbackKeyUpLongPress([]() { Serial.println("Long press"); });
-}
+  pushButton->callbackKeyUpLongPress([]() { Serial.println("Long press up"); });
+
+  pushButton->callbackKeyDownLongPress([]() { Serial.println("Long press down"); });
+}  
 
 void loop() { pushButton->tick(); }

@@ -11,7 +11,10 @@ PushButton::PushButton(int pin)
       m_actionKeyDown(nullptr),
 
       m_callbackKeyUpLongPress(nullptr),
-      m_actionKeyUpLongPress(nullptr) {
+      m_actionKeyUpLongPress(nullptr),
+
+      m_callbackKeyDownLongPress(nullptr),
+      m_actionKeyDownLongPress(nullptr) {
   pinMode(this->m_pin, INPUT_PULLUP);
 
   unsigned long currentTime = millis();
@@ -22,14 +25,30 @@ PushButton::PushButton(int pin)
   this->m_lastStableButtonState = HIGH;
 }
 
-PushButton::PushButton(int pin, ActionBase<void>* actionKeyUp)
+PushButton::PushButton(int pin, ActionBase<void>* actionKeyUp,
+                       ActionBase<void>* actionKeyDown,
+                       ActionBase<void>* actionKeyUpLongPress,
+                       ActionBase<void>* actionKeyDownLongPress,
+                       const unsigned int& longPressDelay)
     : PushButton(pin) {
   this->m_actionKeyUp = actionKeyUp;
+  this->m_actionKeyDown = actionKeyDown;
+  this->m_actionKeyUpLongPress = actionKeyUpLongPress;
+  this->m_actionKeyDownLongPress = actionKeyDownLongPress;
+  this->m_longPressDelay = longPressDelay;
 }
 
-PushButton::PushButton(int pin, Callback callbackKeyUp)
+PushButton::PushButton(int pin, Callback callbackKeyUp,
+                       Callback callbackKeyDown,
+                       Callback callbackKeyUpLongPress,
+                       Callback callbackKeyDownLongPress,
+                       const unsigned int& longPressDelay)
     : PushButton(pin) {
   this->m_callbackKeyUp = callbackKeyUp;
+  this->m_callbackKeyDown = callbackKeyDown;
+  this->m_callbackKeyUpLongPress = callbackKeyUpLongPress;
+  this->m_callbackKeyDownLongPress = callbackKeyDownLongPress;
+  this->m_longPressDelay = longPressDelay;
 }
 
 void PushButton::callbackKeyUp(Callback callbackKeyUp) {
@@ -63,6 +82,17 @@ void PushButton::callbackKeyUpLongPress(
   this->m_callbackKeyUpLongPress = nullptr;
 }
 
+void PushButton::callbackKeyDownLongPress(
+    ActionBase<void>* actionKeyDownLongPress) {
+  this->m_actionKeyDownLongPress = actionKeyDownLongPress;
+  this->m_callbackKeyDownLongPress = nullptr;
+}
+
+void PushButton::callbackKeyDownLongPress(Callback callbackKeyDownLongPress) {
+  this->m_callbackKeyDownLongPress = callbackKeyDownLongPress;
+  this->m_actionKeyDownLongPress = nullptr;
+}
+
 void PushButton::tick() {
   int buttonState = digitalRead(this->m_pin);
   unsigned long currentTime = millis();
@@ -72,6 +102,8 @@ void PushButton::tick() {
   }
   if (currentTime - m_lastStateChangeTime > minPressDelay) {
     if (m_lastStableButtonState == HIGH && buttonState == LOW) {
+      // Falling edge detection
+      m_isLongPressDownTriggered = false;  // Reset long press down trigger
       if (m_actionKeyDown) {
         m_actionKeyDown->execute();
       } else if (m_callbackKeyDown) {
@@ -79,8 +111,9 @@ void PushButton::tick() {
       }
       m_lastDownStateChangeTime = currentTime;
     } else if (m_lastStableButtonState == LOW && buttonState == HIGH) {
+      // Rising edge detection
       if ((m_actionKeyUpLongPress || m_callbackKeyUpLongPress) &&
-          currentTime - m_lastDownStateChangeTime > longPressDelay ) {
+          currentTime - m_lastDownStateChangeTime > this->m_longPressDelay) {
         if (m_actionKeyUpLongPress) {
           m_actionKeyUpLongPress->execute();
         } else if (m_callbackKeyUpLongPress) {
@@ -90,6 +123,16 @@ void PushButton::tick() {
         m_actionKeyUp->execute();
       } else if (m_callbackKeyUp) {
         m_callbackKeyUp();
+      }
+    } else if (m_lastStableButtonState == LOW && buttonState == LOW &&
+               !m_isLongPressDownTriggered &&
+               currentTime - m_lastDownStateChangeTime >
+                   this->m_longPressDelay) {
+      m_isLongPressDownTriggered = true;
+      if (m_actionKeyDownLongPress) {
+        m_actionKeyDownLongPress->execute();
+      } else if (m_callbackKeyDownLongPress) {
+        m_callbackKeyDownLongPress();
       }
     }
     m_lastStableButtonState = buttonState;
