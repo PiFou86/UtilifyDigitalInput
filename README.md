@@ -44,14 +44,23 @@ Include the library in your project and set up your callbacks to respond to vari
 #include <Utilify/DigitalInput/PushButton.h>
 
 PushButton* pushButton = nullptr;
+bool LED_state = false;
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // Wait for serial port to connect. Needed for native USB devices
+  }
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  LED_state = digitalRead(LED_BUILTIN);
 
   // Initialize the button on pin 2
   pushButton = new PushButton(2);
 
   // Set up the callback for button release (Key Up)
   pushButton->callbackKeyUp([]() {
+    LED_state = !LED_state;
+    digitalWrite(LED_BUILTIN, LED_state);
     Serial.println("Up");
   });
 
@@ -62,8 +71,14 @@ void setup() {
 
   // Set up the callback for a long press
   pushButton->callbackKeyUpLongPress([]() {
-    Serial.println("Long press");
+    Serial.println("Long press up");
   });
+
+  pushButton->callbackKeyDownLongPress([]() {
+    Serial.println("Long press down");
+  });
+
+  pushButton->longPressDelay(3000); // Set long press delay to 3 seconds
 }
 
 void loop() {

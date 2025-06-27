@@ -12,6 +12,10 @@ void setup() {
 #else
 #error "Unsupported board"
 #endif
+  while (!Serial) {
+    ; // Wait for serial port to connect. Needed for native USB devices
+  }
+
   pinMode(LED_BUILTIN, OUTPUT);
   LED_state = digitalRead(LED_BUILTIN);
 
@@ -23,11 +27,21 @@ void setup() {
     Serial.println("Up");
   });
 
-  pushButton->callbackKeyDown([]() { Serial.println("Down"); });
+  pushButton->callbackKeyDown([]() {
+    Serial.println("Down");
+  });
 
-  pushButton->callbackKeyUpLongPress([]() { Serial.println("Long press up"); });
+  pushButton->callbackKeyUpLongPress([]() {
+    Serial.println("Long press up");
+  });
 
-  pushButton->callbackKeyDownLongPress([]() { Serial.println("Long press down"); });
-}  
+  pushButton->callbackKeyDownLongPress([]() {
+    Serial.println("Long press down");
+  });
 
-void loop() { pushButton->tick(); }
+  pushButton->longPressDelay(3000); // Set long press delay to 3 seconds
+}
+
+void loop() {
+  pushButton->tick();
+}
