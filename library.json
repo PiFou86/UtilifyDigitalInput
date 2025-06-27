@@ -1,6 +1,6 @@
 {
     "name": "UtilifyDigitalInput",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Utilify provides a collection of versatile digital inputs for Arduino and ESP32 platforms.",
     "keywords": ["pushbutton", "button", "embedded", "platformio", "arduino", "esp32"],
     "authors": [
