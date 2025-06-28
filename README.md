@@ -19,22 +19,9 @@
 To add **UtilifyDigitalInput** to your PlatformIO project, include the library in your `platformio.ini` file:
 
 ```ini
-[env:uno]
-platform = atmelavr
-board = uno
-monitor_speed = 9600
 lib_deps =
-    https://github.com/PiFou86/Utilify.git
-    https://github.com/PiFou86/UtilifyDigitalInput.git
-
-[env:esp32doit-devkit-v1]
-platform = espressif32
-board = esp32doit-devkit-v1
-monitor_speed = 115200
-lib_deps =
-    https://github.com/PiFou86/Utilify.git
-    https://github.com/PiFou86/UtilifyDigitalInput.git
-monitor_filters = esp32_exception_decoder
+    sirdrako/Utilify
+    sirdrako/UtilifyDigitalInput
 ```
 
 ### Basic Usage
