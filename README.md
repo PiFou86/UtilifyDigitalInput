@@ -2,6 +2,8 @@
 
 **UtilifyDigitalInput** is a library that provides a versatile collection of digital inputs for **Arduino** and **ESP32** platforms. Designed to simplify pushbutton management, it offers reliable detection of press, release, and long-press events while seamlessly integrating with the **Utilify** library.
 
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/sirdrako/library/UtilifyDigitalInput.svg)](https://registry.platformio.org/libraries/sirdrako/UtilifyDigitalInput)
+
 ## Features
 
 - **Pushbutton Management**: Detects button presses, releases, and long presses.
